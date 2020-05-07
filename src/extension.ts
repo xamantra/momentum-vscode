@@ -1,27 +1,110 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import * as path from "path";
+import * as fs from "fs";
+import { paramCase, pascalCase } from "change-case";
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  console.log('Extension "momentum-code" is now active!');
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "momentum-code" is now active!');
+  let createComponent = vscode.commands.registerCommand(
+    "extension.createComponent",
+    (uri: vscode.Uri) => {
+      var templateDir = path.join(__dirname, `..`, `template`);
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('momentum-code.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
+      var controllerDir = `${templateDir}\\template.controller.txt`;
+      var modelDir = `${templateDir}/template.model.txt`;
+      var indexDir = `${templateDir}/index.txt`;
 
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from momentum_code!');
-	});
+      vscode.window
+        .showInputBox({ prompt: `Flutter - Momentum Component Name` })
+        .then((input) => {
+          if (input !== undefined) {
+            fs.lstat(uri.fsPath, (err, stats) => {
+              if (err === null || err.code === undefined) {
+                if (stats.isDirectory()) {
+                  var folderPath = `${uri.fsPath}\\${paramCase(input)}`;
+                  fs.lstat(folderPath, (err, stats) => {
+                    if (err !== null && err.code !== undefined) {
+                      if (err.code === `ENOENT`) {
+                        fs.mkdir(folderPath, () => {
+                          createCodeFile(
+                            folderPath,
+                            input,
+                            `controller`,
+                            controllerDir
+                          );
+                          createCodeFile(folderPath, input, `model`, modelDir);
+                          createCodeFile(folderPath, input, ``, indexDir, true);
+                        });
+                      }
+                    } else {
+                      if (stats.isDirectory()) {
+                        vscode.window.showErrorMessage(
+                          `"${paramCase(
+                            input
+                          )}" already exists in the selected directory.`
+                        );
+                      }
+                    }
+                  });
+                }
+              }
+            });
+          }
+        });
+    }
+  );
 
-	context.subscriptions.push(disposable);
+  context.subscriptions.push(createComponent);
 }
 
-// this method is called when your extension is deactivated
 export function deactivate() {}
+
+function createCodeFile(
+  basePath: string,
+  name: string,
+  type: string,
+  generatePath: string,
+  isIndex: boolean = false
+): void {
+  var filePath = `${basePath}\\${paramCase(name)}.${type}.dart`;
+  fs.lstat(filePath, (err, stats) => {
+    if (err !== null) {
+      if (err.code !== undefined && err.code === `ENOENT`) {
+        fs.readFile(generatePath, (err, data) => {
+          var str = data.toString();
+          let template: string;
+          if (!isIndex) {
+            template = str.replace(
+              new RegExp("MomentumTemplate", "g"),
+              pascalCase(name)
+            );
+          } else {
+            template = str.replace(
+              new RegExp("MomentumTemplate", "g"),
+              paramCase(name)
+            );
+          }
+          if (!isIndex) {
+            fs.writeFileSync(
+              `${basePath}\\${paramCase(name)}.${type}.dart`,
+              template
+            );
+          } else {
+            fs.writeFileSync(`${basePath}\\index.dart`, template);
+          }
+        });
+        return;
+      }
+      if (!isIndex) {
+        throw Error(
+          `${pascalCase(
+            name
+          )} code file named "${name}.${type}.dart" already exists.`
+        );
+      } else {
+        throw Error(`${name} code file named "index.dart" already exists.`);
+      }
+    }
+  });
+}

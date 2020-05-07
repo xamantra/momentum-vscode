@@ -1,0 +1,2 @@
+export 'MomentumTemplate.controller.dart';
+export 'MomentumTemplate.model.dart';
