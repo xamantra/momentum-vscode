@@ -3,6 +3,8 @@
   "displayName": "momentum_code",
   "description": "Boilerplate code generator for momentum controller and model class.",
   "version": "0.0.1",
+  "author": "xamantra",
+  "publisher": "xamantra",
   "engines": {
     "vscode": "^1.44.0"
   },

@@ -2,11 +2,12 @@ import 'package:momentum/momentum.dart';
 
 import 'index.dart';
 
-class MomentumTemplateController
-    extends MomentumController<MomentumTemplateModel> {
+class MomentumTemplateController extends MomentumController<MomentumTemplateModel> {
   @override
   MomentumTemplateModel init() {
-    // TODO: implement init
-    return null;
+    return MomentumTemplateModel(
+      this,
+      // TODO: specify initial values here...
+    );
   }
 }
