@@ -11,7 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
     (uri: vscode.Uri) => {
       var templateDir = path.join(__dirname, `..`, `template`);
 
-      var controllerDir = `${templateDir}\\template.controller.txt`;
+      var controllerDir = `${templateDir}/template.controller.txt`;
       var modelDir = `${templateDir}/template.model.txt`;
       var indexDir = `${templateDir}/index.txt`;
 
@@ -22,7 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
             fs.lstat(uri.fsPath, (err, stats) => {
               if (err === null || err.code === undefined) {
                 if (stats.isDirectory()) {
-                  var folderPath = `${uri.fsPath}\\${paramCase(input)}`;
+                  var folderPath = `${uri.fsPath}/${paramCase(input)}`;
                   fs.lstat(folderPath, (err, stats) => {
                     if (err !== null && err.code !== undefined) {
                       if (err.code === `ENOENT`) {
@@ -67,7 +67,7 @@ function createCodeFile(
   generatePath: string,
   isIndex: boolean = false
 ): void {
-  var filePath = `${basePath}\\${paramCase(name)}.${type}.dart`;
+  var filePath = `${basePath}/${paramCase(name)}.${type}.dart`;
   fs.lstat(filePath, (err, stats) => {
     if (err !== null) {
       if (err.code !== undefined && err.code === `ENOENT`) {
@@ -87,11 +87,11 @@ function createCodeFile(
           }
           if (!isIndex) {
             fs.writeFileSync(
-              `${basePath}\\${paramCase(name)}.${type}.dart`,
+              `${basePath}/${paramCase(name)}.${type}.dart`,
               template
             );
           } else {
-            fs.writeFileSync(`${basePath}\\index.dart`, template);
+            fs.writeFileSync(`${basePath}/index.dart`, template);
           }
         });
         return;
