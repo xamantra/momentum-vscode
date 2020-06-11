@@ -4,6 +4,9 @@ All notable changes to the "momentum-code" extension will be documented in this 
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
+## 1.0.2
+Used lower version of vscode on package.json config.
+
+## 1.0.1
 
 - Initial release

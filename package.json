@@ -2,11 +2,11 @@
   "name": "momentum-code",
   "displayName": "Momentum Code Generator",
   "description": "Boilerplate code generator for momentum controller and model class.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "xamantra",
   "publisher": "xamantra",
   "engines": {
-    "vscode": "^1.44.0"
+    "vscode": "^1.30.0"
   },
   "repository": {
     "type": "Github",
@@ -45,7 +45,7 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.44.0",
+    "@types/vscode": "^1.30.0",
     "@types/glob": "^7.1.1",
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.11.0",
